@@ -1,6 +1,6 @@
 ---
 name: compile-to-wasm
-description: Generates build pipelines to compile C or Rust source code into optimized .wasm modules. Use when user asks to "compile to wasm", "build wasm module", "create wasm from C/Rust", "wrap a C library for wasm", or needs a Makefile/Dockerfile for WebAssembly compilation. Handles both library wrapping (reactor mode with malloc/free exports) and CLI tools (command mode with stdin/stdout).
+description: Generates build pipelines to compile C, C++, Rust, Go, or Zig source code into optimized .wasm modules, and shows how to consume them from host runtimes (Wasmtime, Chicory). Use when user asks to "compile to wasm", "build wasm module", "create wasm from C/Rust/Go/Zig", "wrap a C library for wasm", "embed a native library in Java/Rust without JNI/FFI", "portable native code", or needs a Makefile/Dockerfile for WebAssembly compilation. Covers library wrapping (reactor mode with malloc/free exports), CLI tools (command mode with stdin/stdout), and host-side integration patterns.
 ---
 
 # Compile native code to WebAssembly

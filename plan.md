@@ -56,16 +56,7 @@ Show how to **use** the produced .wasm modules, not just build them.
 
 ---
 
-## Phase 3: Expand Dockerized Builds
-- [ ] `examples/c-docker-multistage/` — multi-stage Docker build (smaller image, cleaner separation)
-- [ ] `examples/c-docker-cache/` — Docker build with layer caching for faster rebuilds (separate toolchain download from compilation)
-- [ ] Docker Compose for complex builds (multiple source dependencies)
-- [ ] CI job that builds all Docker examples and validates they produce identical .wasm to local builds
-- [ ] Update `SKILL.md` Docker section with guidance on when to use each Docker pattern
-
----
-
-## Phase 4: Incompatible Dependencies & Patching
+## Phase 3: Incompatible Dependencies & Patching
 Demonstrate how to handle libraries that don't compile to wasm out of the box.
 
 - [ ] `examples/c-patch-abseil/` — C/C++ library with platform-specific code (abseil-cpp or similar)
@@ -86,7 +77,7 @@ Demonstrate how to handle libraries that don't compile to wasm out of the box.
 
 ---
 
-## Phase 5: C++ Examples
+## Phase 4: C++ Examples
 - [ ] `examples/cpp-lib/` — C++ library wrapper (e.g., nlohmann/json or a small C++ lib)
   - [ ] Makefile with `clang++` targeting wasm32-wasip1
   - [ ] `extern "C"` wrapper functions for FFI
@@ -104,7 +95,7 @@ Demonstrate how to handle libraries that don't compile to wasm out of the box.
 
 ---
 
-## Phase 6: Go Examples
+## Phase 5: Go Examples
 - [ ] `examples/go-tinygo/` — TinyGo → wasm (preferred for small modules)
   - [ ] Library mode: `//export` directives, reactor build
   - [ ] CLI mode: standard main with stdin/stdout
@@ -122,23 +113,7 @@ Demonstrate how to handle libraries that don't compile to wasm out of the box.
 
 ---
 
-## Phase 7: Swift Examples
-- [ ] `examples/swift-standard/` — Standard Swift → wasm via SwiftWasm
-  - [ ] SwiftWasm toolchain setup
-  - [ ] `swift build --triple wasm32-unknown-wasi`
-  - [ ] CLI tool example (command mode)
-  - [ ] `test.sh` with wasmtime functional test
-- [ ] `examples/swift-embedded/` — Embedded Swift → wasm (Swift 6+)
-  - [ ] Embedded Swift mode (no runtime, no allocator)
-  - [ ] `swiftc -target wasm32-unknown-none-wasm` or similar
-  - [ ] Minimal binary size, pure computation
-  - [ ] `test.sh` with verification
-- [ ] Update `references/compilation-flags.md` with Swift-specific flags
-- [ ] Update `SKILL.md` with Swift section
-
----
-
-## Phase 8: Zig Examples
+## Phase 6: Zig Examples
 - [ ] `examples/zig-lib/` — Zig library → wasm (reactor mode)
   - [ ] Zig as a first-class wasm compiler (built-in wasm target)
   - [ ] `zig build-lib -target wasm32-wasi` or `build.zig` with wasm target
@@ -153,7 +128,21 @@ Demonstrate how to handle libraries that don't compile to wasm out of the box.
 
 ---
 
-## Phase 9: WASI Preview 2 / Component Model
+## Phase 7: Debugging Wasm
+- [ ] `references/debugging.md`
+  - [ ] Keeping DWARF debug info: compile with `-g`, skip `--strip-debug` in wasm-opt
+  - [ ] `wasm-tools dump` / `wasm-tools print` for inspection
+  - [ ] `wasm-tools strip` to remove debug info for release
+  - [ ] Source-level debugging with Chrome DevTools (for browser wasm)
+  - [ ] Debugging with `wasmtime --debug` and LLDB
+  - [ ] Adding `name` section for readable stack traces: `wasm-opt --debuginfo`
+  - [ ] Dev vs release build profiles (Makefile targets)
+- [ ] Update example Makefiles to include a `debug` target alongside `release`
+- [ ] Update `SKILL.md` with debugging section
+
+---
+
+## Phase 8: WASI Preview 2 / Component Model
 - [ ] `examples/component-rust/` — Rust component with WIT interface
   - [ ] `.wit` interface definition
   - [ ] `wit-bindgen` code generation
@@ -165,45 +154,6 @@ Demonstrate how to handle libraries that don't compile to wasm out of the box.
   - [ ] `wasm-tools compose` to link
 - [ ] `references/component-model.md` — P1 vs P2, when to use components, WIT basics
 - [ ] Update `SKILL.md` with Component Model section
-
----
-
-## Phase 10: Multi-Language Linking
-- [ ] `examples/multi-rust-calls-c/` — Rust crate that links a C library into the same wasm module
-  - [ ] `build.rs` with `cc` crate to compile C source
-  - [ ] Rust calls C functions via FFI within the wasm module
-  - [ ] Single .wasm output containing both Rust and C code
-  - [ ] `test.sh` with verification
-- [ ] `examples/multi-c-links-rust/` — C module that links a Rust static library
-  - [ ] Rust compiled as `staticlib` for wasm32
-  - [ ] C wrapper links the `.a` and exports combined functions
-  - [ ] `test.sh` with verification
-- [ ] Update `SKILL.md` with multi-language linking guidance
-
----
-
-## Phase 11: Size Budget & Comparison Table
-- [ ] `references/size-comparison.md` — after all examples are built, document:
-  - [ ] Binary size per language + optimization level (table)
-  - [ ] Compile time per language
-  - [ ] Feature support matrix (threads, SIMD, component model, reactor mode)
-  - [ ] "When to use which language" decision guide
-- [ ] CI job that builds all examples and generates the size table automatically
-- [ ] `scripts/size-report.sh` — builds all examples, collects sizes, outputs markdown table
-
----
-
-## Phase 12: Debugging Wasm
-- [ ] `references/debugging.md`
-  - [ ] Keeping DWARF debug info: compile with `-g`, skip `--strip-debug` in wasm-opt
-  - [ ] `wasm-tools dump` / `wasm-tools print` for inspection
-  - [ ] `wasm-tools strip` to remove debug info for release
-  - [ ] Source-level debugging with Chrome DevTools (for browser wasm)
-  - [ ] Debugging with `wasmtime --debug` and LLDB
-  - [ ] Adding `name` section for readable stack traces: `wasm-opt --debuginfo`
-  - [ ] Dev vs release build profiles (Makefile targets)
-- [ ] Update example Makefiles to include a `debug` target alongside `release`
-- [ ] Update `SKILL.md` with debugging section
 
 ---
 
