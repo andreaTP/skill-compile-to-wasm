@@ -1,0 +1,31 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:resources.anthropic.com)",
+      "Bash(chmod +x /home/andreatp/workspace/compile-to-wasm-skills/compile-to-wasm/scripts/resolve-versions.sh /home/andreatp/workspace/compile-to-wasm-skills/compile-to-wasm/scripts/verify-wasm.sh)",
+      "Bash(chmod +x /home/andreatp/workspace/compile-to-wasm-skills/compile-to-wasm/examples/c-docker/test.sh /home/andreatp/workspace/compile-to-wasm-skills/compile-to-wasm/examples/c-local/test.sh /home/andreatp/workspace/compile-to-wasm-skills/compile-to-wasm/examples/rust-lib/test.sh /home/andreatp/workspace/compile-to-wasm-skills/compile-to-wasm/examples/rust-cli/test.sh)",
+      "Bash(/home/andreatp/workspace/compile-to-wasm-skills/compile-to-wasm/scripts/resolve-versions.sh)",
+      "Bash(/home/andreatp/workspace/compile-to-wasm-skills/compile-to-wasm/scripts/verify-wasm.sh /home/andreatp/workspace/quickjs4j/javy_quickjs4j_plugin.wasm)",
+      "Bash(/home/andreatp/workspace/compile-to-wasm-skills/compile-to-wasm/scripts/verify-wasm.sh /home/andreatp/workspace/quickjs4j/javy_quickjs4j_plugin.wasm eval invoke nonexistent_fn)",
+      "Bash(echo \"Exit code: $?\")",
+      "Bash(command -v wasmtime)",
+      "Bash(command -v wat2wasm)",
+      "Bash(chmod +x /home/andreatp/workspace/compile-to-wasm-skills/compile-to-wasm/scripts/lint-skill.sh)",
+      "Bash(/home/andreatp/workspace/compile-to-wasm-skills/compile-to-wasm/scripts/lint-skill.sh)",
+      "Bash(wat2wasm /home/andreatp/workspace/compile-to-wasm-skills/compile-to-wasm/tests/fixture.wat -o /tmp/fixture-test.wasm)",
+      "Bash(/home/andreatp/workspace/compile-to-wasm-skills/compile-to-wasm/scripts/verify-wasm.sh /tmp/fixture-test.wasm malloc free add _start)",
+      "Bash(shellcheck /home/andreatp/workspace/compile-to-wasm-skills/compile-to-wasm/scripts/*.sh /home/andreatp/workspace/compile-to-wasm-skills/compile-to-wasm/examples/*/test.sh)",
+      "Bash(chmod +x /home/andreatp/workspace/compile-to-wasm-skills/compile-to-wasm/scripts/install-wasm-tools.sh)",
+      "Bash(shellcheck /home/andreatp/workspace/compile-to-wasm-skills/compile-to-wasm/scripts/*.sh)",
+      "Bash(chmod +x /home/andreatp/workspace/compile-to-wasm-skills/compile-to-wasm/examples/consume-wasmtime/test.sh /home/andreatp/workspace/compile-to-wasm-skills/compile-to-wasm/examples/consume-chicory/test.sh)",
+      "Bash(shellcheck compile-to-wasm/examples/consume-wasmtime/test.sh compile-to-wasm/examples/consume-chicory/test.sh)",
+      "Bash(compile-to-wasm/scripts/lint-skill.sh)",
+      "Bash(chmod +x /home/andreatp/workspace/compile-to-wasm-skills/compile-to-wasm/scripts/test-resolve-versions.sh /home/andreatp/workspace/compile-to-wasm-skills/compile-to-wasm/scripts/test-verify-wasm.sh /home/andreatp/workspace/compile-to-wasm-skills/compile-to-wasm/scripts/test-all.sh)",
+      "Bash(shellcheck compile-to-wasm/scripts/*.sh tests/*.sh compile-to-wasm/examples/*/test.sh)",
+      "Bash(shellcheck compile-to-wasm/examples/consume-wasmtime/test.sh compile-to-wasm/examples/consume-chicory/test.sh tests/*.sh)",
+      "Bash(./tests/test-all.sh --skip-docker --skip-consume)",
+      "Bash(./tests/test-all.sh)",
+      "Bash(/home/andreatp/workspace/compile-to-wasm-skills/tests/test-all.sh)"
+    ]
+  }
+}

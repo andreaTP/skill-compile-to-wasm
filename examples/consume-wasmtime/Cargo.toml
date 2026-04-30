@@ -1,0 +1,9 @@
+[package]
+name = "consume-wasmtime"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+wasmtime = "29"
+wasmtime-wasi = "29"
+anyhow = "1"

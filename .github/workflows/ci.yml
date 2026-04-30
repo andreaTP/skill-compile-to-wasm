@@ -1,0 +1,237 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  # ─── Lint & structure checks ───────────────────────────────────────
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Skill structure lint
+        run: scripts/lint-skill.sh
+
+      - name: Shellcheck
+        run: shellcheck scripts/*.sh tests/*.sh examples/*/test.sh
+
+  # ─── Test resolve-versions.sh ──────────────────────────────────────
+  test-scripts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install wasm-tools
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          scripts/install-wasm-tools.sh
+          echo "$PWD/bin" >> "$GITHUB_PATH"
+
+      - name: Test resolve-versions.sh
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: tests/test-resolve-versions.sh --check-urls
+
+      - name: Test verify-wasm.sh
+        run: tests/test-verify-wasm.sh
+
+  # ─── Build C local example ─────────────────────────────────────────
+  build-c-local:
+    needs: [lint, test-scripts]
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install wasm-tools
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          scripts/install-wasm-tools.sh
+          echo "$PWD/bin" >> "$GITHUB_PATH"
+
+      - name: Cache toolchains
+        uses: actions/cache@v4
+        with:
+          path: |
+            examples/c-local/wasi-sdk
+            examples/c-local/binaryen
+            examples/c-local/versions.env
+          key: c-local-${{ runner.os }}-${{ runner.arch }}
+
+      - name: Build and verify
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: examples/c-local/test.sh
+
+  # ─── Build C Docker example ────────────────────────────────────────
+  build-c-docker:
+    needs: [lint, test-scripts]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install wasm-tools
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          scripts/install-wasm-tools.sh
+          echo "$PWD/bin" >> "$GITHUB_PATH"
+
+      - name: Build and verify
+        run: examples/c-docker/test.sh
+
+  # ─── Build Rust lib example ────────────────────────────────────────
+  build-rust-lib:
+    needs: [lint, test-scripts]
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Rust
+        run: rustup target add wasm32-wasip1
+
+      - name: Install wasm-tools
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          scripts/install-wasm-tools.sh
+          echo "$PWD/bin" >> "$GITHUB_PATH"
+
+      - name: Cache toolchains + cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            examples/rust-lib/wasi-sdk
+            examples/rust-lib/binaryen
+            examples/rust-lib/versions.env
+            examples/rust-lib/target
+            ~/.cargo/registry
+            ~/.cargo/git
+          key: rust-lib-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('examples/rust-lib/Cargo.lock') }}
+          restore-keys: rust-lib-${{ runner.os }}-${{ runner.arch }}-
+
+      - name: Build and verify
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: examples/rust-lib/test.sh
+
+  # ─── Build Rust CLI example ────────────────────────────────────────
+  build-rust-cli:
+    needs: [lint, test-scripts]
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Rust
+        run: rustup target add wasm32-wasip1
+
+      - name: Install wasm-tools + wasmtime
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          scripts/install-wasm-tools.sh --wasmtime
+          echo "$PWD/bin" >> "$GITHUB_PATH"
+
+      - name: Cache toolchains + cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            examples/rust-cli/binaryen
+            examples/rust-cli/versions.env
+            examples/rust-cli/target
+            ~/.cargo/registry
+            ~/.cargo/git
+          key: rust-cli-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('examples/rust-cli/Cargo.lock') }}
+          restore-keys: rust-cli-${{ runner.os }}-${{ runner.arch }}-
+
+      - name: Build and verify
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: examples/rust-cli/test.sh
+
+  # ─── Consume: Wasmtime (Rust API) ─────────────────────────────────
+  consume-wasmtime:
+    needs: [build-c-local, build-rust-cli]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install wasm-tools + wasmtime
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          scripts/install-wasm-tools.sh --wasmtime
+          echo "$PWD/bin" >> "$GITHUB_PATH"
+
+      - name: Cache toolchains
+        uses: actions/cache@v4
+        with:
+          path: |
+            examples/c-local/wasi-sdk
+            examples/c-local/binaryen
+            examples/c-local/versions.env
+            examples/rust-cli/binaryen
+            examples/rust-cli/versions.env
+            ~/.cargo/registry
+            ~/.cargo/git
+          key: consume-wasmtime-${{ runner.os }}-${{ runner.arch }}
+
+      - name: Setup Rust
+        run: rustup target add wasm32-wasip1
+
+      - name: Build and test
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: examples/consume-wasmtime/test.sh
+
+  # ─── Consume: Chicory (Java, interpreter + compiler) ───────────────
+  consume-chicory:
+    needs: [build-c-local]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Install wasm-tools
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          scripts/install-wasm-tools.sh
+          echo "$PWD/bin" >> "$GITHUB_PATH"
+
+      - name: Setup Rust (for building wasm dep)
+        run: rustup target add wasm32-wasip1
+
+      - name: Cache toolchains
+        uses: actions/cache@v4
+        with:
+          path: |
+            examples/c-local/wasi-sdk
+            examples/c-local/binaryen
+            examples/c-local/versions.env
+            ~/.m2/repository
+          key: consume-chicory-${{ runner.os }}-${{ runner.arch }}
+
+      - name: Build and test
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: examples/consume-chicory/test.sh

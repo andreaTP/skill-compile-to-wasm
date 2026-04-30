@@ -1,0 +1,23 @@
+# Toolchains (downloaded by Makefiles / install scripts)
+wasi-sdk/
+binaryen/
+bin/
+versions.env
+
+# Build artifacts
+target/
+wasm/
+cjson-src/
+
+# Rust
+Cargo.lock
+!compile-to-wasm/examples/*/Cargo.lock
+
+# Java / Maven
+*.class
+*.jar
+.m2/
+
+# OS
+.DS_Store
+Thumbs.db
