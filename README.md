@@ -75,4 +75,4 @@ export PATH="$PWD/bin:$PATH"
 
 ## License
 
-MIT
+Apache 2.0
