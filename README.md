@@ -36,42 +36,11 @@ build a Rust CLI tool that converts YAML to JSON, compile to wasm
 I'm getting "undefined symbol: signal" when compiling to wasm — help me fix it
 ```
 
-## What's included
+The `examples/` directory contains working, tested examples covering C (local + Docker), Rust (library + CLI), patching strategies, and host-side consumption (Wasmtime + Chicory). Each has a `Makefile` and `test.sh`.
 
-| Directory | Purpose |
-|---|---|
-| `SKILL.md` | Main skill instructions (what Claude reads) |
-| `scripts/` | Toolchain scripts: version resolution, wasm verification, wasm-tools installer |
-| `references/` | Deep-dive docs: compilation flags, host integration, patching guide, troubleshooting |
-| `examples/` | 8 working, tested examples (see below) |
-| `tests/` | Test harness for local and CI validation |
+## Contributing
 
-### Examples
-
-| Example | What it demonstrates |
-|---|---|
-| `c-local/` | C library wrapper (cJSON) with local WASI SDK, cross-platform |
-| `c-docker/` | Same library, Docker-based build |
-| `c-patch/` | Handling incompatible C code: `-D` flags and WASI emulation libraries |
-| `rust-lib/` | Rust cdylib wrapper (regex crate), reactor mode |
-| `rust-cli/` | Rust CLI tool (CSV to JSON), command mode |
-| `rust-patch/` | Handling incompatible Rust deps: `default-features = false`, `#[cfg]` |
-| `consume-wasmtime/` | Consuming wasm from Rust via Wasmtime API |
-| `consume-chicory/` | Consuming wasm from Java via Chicory (interpreter + compiler modes) |
-
-Every example has a `Makefile`, a `test.sh`, and builds a real dependency — not toy code.
-
-## Development
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for repo structure, local development setup, and how to add new examples.
-
-Quick start:
-
-```bash
-./scripts/install-wasm-tools.sh --wasmtime
-export PATH="$PWD/bin:$PATH"
-./tests/test-all.sh --skip-docker --skip-consume
-```
+See [CONTRIBUTING.md](CONTRIBUTING.md) for repo structure, local development, and how to add new examples.
 
 ## License
 
