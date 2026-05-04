@@ -1,0 +1,17 @@
+--- a/upstream.h
++++ b/upstream.h
+@@ -29,6 +29,7 @@
+     return count;
+ }
+
++#if !defined(__wasi__)
+ #ifndef UPSTREAM_NO_SIGNALS
+ static void timeout_handler(int sig) {
+     (void)sig;
+@@ -39,5 +40,6 @@
+     (void)seconds;
+ }
+ #endif
++#endif /* !__wasi__ */
+
+ #endif

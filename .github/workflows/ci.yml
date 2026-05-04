@@ -163,6 +163,74 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: examples/rust-cli/test.sh
 
+  # ─── Build C patching example ───────────────────────────────────────
+  build-c-patch:
+    needs: [lint, test-scripts]
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install wasm-tools
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          scripts/install-wasm-tools.sh
+          echo "$PWD/bin" >> "$GITHUB_PATH"
+
+      - name: Cache toolchains
+        uses: actions/cache@v4
+        with:
+          path: |
+            examples/c-patch/wasi-sdk
+            examples/c-patch/binaryen
+            examples/c-patch/versions.env
+          key: c-patch-${{ runner.os }}-${{ runner.arch }}
+
+      - name: Build and verify
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: examples/c-patch/test.sh
+
+  # ─── Build Rust patching example ───────────────────────────────────
+  build-rust-patch:
+    needs: [lint, test-scripts]
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Rust
+        run: rustup target add wasm32-wasip1
+
+      - name: Install wasm-tools
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          scripts/install-wasm-tools.sh
+          echo "$PWD/bin" >> "$GITHUB_PATH"
+
+      - name: Cache toolchains + cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            examples/rust-patch/binaryen
+            examples/rust-patch/versions.env
+            examples/rust-patch/target
+            ~/.cargo/registry
+            ~/.cargo/git
+          key: rust-patch-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('examples/rust-patch/Cargo.lock') }}
+          restore-keys: rust-patch-${{ runner.os }}-${{ runner.arch }}-
+
+      - name: Build and verify
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: examples/rust-patch/test.sh
+
   # ─── Consume: Wasmtime (Rust API) ─────────────────────────────────
   consume-wasmtime:
     needs: [build-c-local, build-rust-cli]

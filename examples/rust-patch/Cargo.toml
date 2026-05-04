@@ -1,0 +1,22 @@
+[package]
+name = "rust-patch-example"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "rust_patch_example"
+crate-type = ["cdylib"]
+
+# Strategy: default-features = false
+# The `chrono` crate pulls in platform-specific clock code by default.
+# Disabling default features avoids the `clock` feature which needs
+# libc::clock_gettime — unavailable on wasm32-wasip1 without emulation.
+[dependencies]
+chrono = { version = "0.4", default-features = false }
+
+[profile.release]
+opt-level = 'z'
+lto = true
+codegen-units = 1
+strip = true
+panic = "abort"

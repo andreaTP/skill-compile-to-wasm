@@ -56,24 +56,14 @@ Show how to **use** the produced .wasm modules, not just build them.
 
 ---
 
-## Phase 3: Incompatible Dependencies & Patching
+## Phase 3: Incompatible Dependencies & Patching (Done)
 Demonstrate how to handle libraries that don't compile to wasm out of the box.
 
-- [ ] `examples/c-patch-abseil/` — C/C++ library with platform-specific code (abseil-cpp or similar)
-  - [ ] Show the build failure first (document the error)
-  - [ ] Patch approach 1: `sed`/`patch` in Dockerfile to stub out incompatible code
-  - [ ] Patch approach 2: overlay headers (`sysfix/` pattern from pglite4j)
-  - [ ] Patch approach 3: `-D` defines to disable features at compile time
-  - [ ] Working build with patches applied
-  - [ ] `test.sh` verifying the patched build works
-- [ ] `examples/rust-patch-dep/` — Rust crate with an incompatible dependency
-  - [ ] Show the build failure first
-  - [ ] Patch approach 1: `[patch.crates-io]` in Cargo.toml pointing to a fork/local path
-  - [ ] Patch approach 2: feature flags to disable incompatible features (`default-features = false`)
-  - [ ] Patch approach 3: `#[cfg(target_arch = "wasm32")]` conditional compilation
-  - [ ] Working build with patches applied
-  - [ ] `test.sh` verifying the patched build works
-- [ ] `references/patching-guide.md` — general strategies for making code wasm-compatible
+- [x] `references/patching-guide.md` — 8 strategies distilled from roastedroot projects (pglite4j, sqlite4j, jq4j, prism, lumis4j), with decision flowchart and error→fix table
+- [x] `examples/c-patch/` — C example showing two approaches: -D flag and WASI emulation library
+- [x] `examples/rust-patch/` — Rust example showing default-features=false and #[cfg(target_arch)] patterns
+- [x] Updated SKILL.md with patching section (Step 5)
+- [x] CI jobs: build-c-patch and build-rust-patch (Linux + macOS matrix)
 
 ---
 

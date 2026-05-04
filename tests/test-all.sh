@@ -74,6 +74,10 @@ fi
 run_test "rust-lib" "$EXAMPLES_DIR/rust-lib/test.sh"
 run_test "rust-cli" "$EXAMPLES_DIR/rust-cli/test.sh"
 
+# ─── Patching examples ────────────────────────────────────────────
+run_test "c-patch" "$EXAMPLES_DIR/c-patch/test.sh"
+run_test "rust-patch" "$EXAMPLES_DIR/rust-patch/test.sh"
+
 # ─── Consumption examples ─────────────────────────────────────────
 if [ "$SKIP_CONSUME" = true ]; then
     skip_test "consume-wasmtime" "--skip-consume"

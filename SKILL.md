@@ -330,7 +330,23 @@ build: ensure-target
 	cargo build --target wasm32-wasip1 --release
 ```
 
-## Step 5: Verify the output
+## Step 5: Handle incompatible dependencies
+
+Most real libraries need some patching to compile to wasm. Strategies, ordered by complexity:
+
+1. **`-D` flags** — disable features at compile time (e.g., `-DSQLITE_THREADSAFE=0`)
+2. **WASI emulation libraries** — stub missing POSIX APIs (e.g., `-D_WASI_EMULATED_SIGNAL -lwasi-emulated-signal`)
+3. **Wrapper code** — leave upstream untouched, wrap with a new API
+4. **`#[cfg]` guards** (Rust) — conditional compilation for wasm32 vs native
+5. **`default-features = false`** (Rust) — disable crate features that pull in platform-specific deps
+6. **Source patches** — guard code with `#if !defined(__wasi__)`
+
+For the complete guide with real examples from production projects, consult `references/patching-guide.md`.
+
+See `examples/c-patch/` for a C example showing approaches 1 and 2.
+See `examples/rust-patch/` for a Rust example showing approaches 4 and 5.
+
+## Step 6: Verify the output
 
 After compilation, always verify the `.wasm` module:
 
@@ -351,7 +367,7 @@ The verification script checks:
 3. Lists all exports (if `wasm-tools` is installed)
 4. Validates expected exports are present
 
-## Step 6: TDD workflow
+## Step 7: TDD workflow
 
 Always follow the build-verify-test cycle:
 
@@ -362,7 +378,7 @@ Always follow the build-verify-test cycle:
 
 Create a `test.sh` for every project. See the examples for the pattern.
 
-## Step 7: Consume the wasm module
+## Step 8: Consume the wasm module
 
 After building and verifying, integrate the `.wasm` module into a host application.
 For detailed API examples and code patterns, consult `references/host-integration.md`.
