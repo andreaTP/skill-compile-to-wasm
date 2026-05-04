@@ -38,7 +38,7 @@ get-versions:
 get-binaryen: get-versions
 	@if [ ! -d "$(PWD)/binaryen" ]; then \
 		. $(PWD)/versions.env && \
-		echo "Downloading Binaryen $${BINARYEN_VERSION} for $(OS_NAME)/$(ARCH_NAME)..." && \
+		echo "Downloading Binaryen $${BINARYEN_VERSION}..." && \
 		curl -sL "$${BINARYEN_URL}" | tar xz && \
 		mv binaryen-$${BINARYEN_TAG} $(PWD)/binaryen; \
 	fi

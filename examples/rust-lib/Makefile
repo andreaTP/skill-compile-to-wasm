@@ -38,16 +38,16 @@ get-versions:
 get-wasisdk: get-versions
 	@if [ ! -d "$(PWD)/wasi-sdk" ]; then \
 		. $(PWD)/versions.env && \
-		echo "Downloading WASI SDK $${WASI_SDK_VERSION} for $(OS_NAME)/$(ARCH_NAME)..." && \
-		curl -sL "https://github.com/WebAssembly/wasi-sdk/releases/download/$${WASI_SDK_TAG}/wasi-sdk-$${WASI_SDK_VERSION}.0-$(ARCH_NAME)-$(OS_NAME).tar.gz" | tar xz && \
-		mv wasi-sdk-$${WASI_SDK_VERSION}.0-$(ARCH_NAME)-$(OS_NAME) $(PWD)/wasi-sdk; \
+		echo "Downloading WASI SDK $${WASI_SDK_VERSION}..." && \
+		curl -sL "$${WASI_SDK_URL}" | tar xz && \
+		mv wasi-sdk-$${WASI_SDK_VERSION}.0-* $(PWD)/wasi-sdk; \
 	fi
 
 get-binaryen: get-versions
 	@if [ ! -d "$(PWD)/binaryen" ]; then \
 		. $(PWD)/versions.env && \
-		echo "Downloading Binaryen $${BINARYEN_VERSION} for $(OS_NAME)/$(ARCH_NAME)..." && \
-		curl -sL "https://github.com/WebAssembly/binaryen/releases/download/$${BINARYEN_TAG}/binaryen-$${BINARYEN_TAG}-$(ARCH_NAME)-$(OS_NAME).tar.gz" | tar xz && \
+		echo "Downloading Binaryen $${BINARYEN_VERSION}..." && \
+		curl -sL "$${BINARYEN_URL}" | tar xz && \
 		mv binaryen-$${BINARYEN_TAG} $(PWD)/binaryen; \
 	fi
 

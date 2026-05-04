@@ -51,9 +51,14 @@ case "$ARCH" in
 esac
 
 # Resolve WASI SDK (tag format: "wasi-sdk-25")
+# WASI SDK 33+ uses "arm64" instead of "aarch64" in asset names
 WASI_SDK_TAG=$(gh_latest_tag "WebAssembly/wasi-sdk")
 WASI_SDK_VERSION="${WASI_SDK_TAG#wasi-sdk-}"
-WASI_SDK_URL="https://github.com/WebAssembly/wasi-sdk/releases/download/${WASI_SDK_TAG}/wasi-sdk-${WASI_SDK_VERSION}.0-${ARCH_NAME}-${OS_NAME}.tar.gz"
+WASI_SDK_ARCH="${ARCH_NAME}"
+if [ "$ARCH_NAME" = "aarch64" ]; then
+    WASI_SDK_ARCH="arm64"
+fi
+WASI_SDK_URL="https://github.com/WebAssembly/wasi-sdk/releases/download/${WASI_SDK_TAG}/wasi-sdk-${WASI_SDK_VERSION}.0-${WASI_SDK_ARCH}-${OS_NAME}.tar.gz"
 
 # Resolve Binaryen (tag format: "version_125")
 BINARYEN_TAG=$(gh_latest_tag "WebAssembly/binaryen")
