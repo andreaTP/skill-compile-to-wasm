@@ -42,33 +42,32 @@ case "$OS" in
     *)      echo "ERROR: Unsupported OS: $OS" >&2; exit 1 ;;
 esac
 
-# Detect architecture
+# Detect architecture — most tools now use "arm64", Wizer still uses "aarch64"
 ARCH=$(uname -m)
 case "$ARCH" in
     x86_64)         ARCH_NAME="x86_64" ;;
-    aarch64|arm64)  ARCH_NAME="aarch64" ;;
+    aarch64|arm64)  ARCH_NAME="arm64" ;;
     *)              echo "ERROR: Unsupported architecture: $ARCH" >&2; exit 1 ;;
 esac
 
 # Resolve WASI SDK (tag format: "wasi-sdk-25")
-# WASI SDK 33+ uses "arm64" instead of "aarch64" in asset names
 WASI_SDK_TAG=$(gh_latest_tag "WebAssembly/wasi-sdk")
 WASI_SDK_VERSION="${WASI_SDK_TAG#wasi-sdk-}"
-WASI_SDK_ARCH="${ARCH_NAME}"
-if [ "$ARCH_NAME" = "aarch64" ]; then
-    WASI_SDK_ARCH="arm64"
-fi
-WASI_SDK_URL="https://github.com/WebAssembly/wasi-sdk/releases/download/${WASI_SDK_TAG}/wasi-sdk-${WASI_SDK_VERSION}.0-${WASI_SDK_ARCH}-${OS_NAME}.tar.gz"
+WASI_SDK_URL="https://github.com/WebAssembly/wasi-sdk/releases/download/${WASI_SDK_TAG}/wasi-sdk-${WASI_SDK_VERSION}.0-${ARCH_NAME}-${OS_NAME}.tar.gz"
 
 # Resolve Binaryen (tag format: "version_125")
 BINARYEN_TAG=$(gh_latest_tag "WebAssembly/binaryen")
 BINARYEN_VERSION="${BINARYEN_TAG#version_}"
 BINARYEN_URL="https://github.com/WebAssembly/binaryen/releases/download/${BINARYEN_TAG}/binaryen-${BINARYEN_TAG}-${ARCH_NAME}-${OS_NAME}.tar.gz"
 
-# Resolve Wizer (tag format: "v10.0.0")
+# Resolve Wizer (tag format: "v10.0.0") — still uses "aarch64" in asset names
 WIZER_TAG=$(gh_latest_tag "bytecodealliance/wizer")
 WIZER_VERSION="${WIZER_TAG#v}"
-WIZER_URL="https://github.com/bytecodealliance/wizer/releases/download/${WIZER_TAG}/wizer-${WIZER_TAG}-${ARCH_NAME}-${OS_NAME}.tar.xz"
+WIZER_ARCH="${ARCH_NAME}"
+if [ "$ARCH_NAME" = "arm64" ]; then
+    WIZER_ARCH="aarch64"
+fi
+WIZER_URL="https://github.com/bytecodealliance/wizer/releases/download/${WIZER_TAG}/wizer-${WIZER_TAG}-${WIZER_ARCH}-${OS_NAME}.tar.xz"
 
 # Output shell-sourceable variables
 cat <<EOF
