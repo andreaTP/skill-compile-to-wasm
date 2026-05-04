@@ -51,13 +51,8 @@ if [ "$CHECK_URLS" = true ]; then
     echo "Step 3: Verifying download URLs are reachable..."
     eval "$OUTPUT"
 
-    AUTH_ARGS=()
-    if [ -n "${GITHUB_TOKEN:-}" ]; then
-        AUTH_ARGS=(-H "Authorization: token $GITHUB_TOKEN")
-    fi
-
     for url in "$WASI_SDK_URL" "$BINARYEN_URL" "$WIZER_URL"; do
-        STATUS=$(curl -sI -o /dev/null -w '%{http_code}' "${AUTH_ARGS[@]}" -L "$url" || true)
+        STATUS=$(curl -sI -o /dev/null -w '%{http_code}' -L "$url" || true)
         if [ "$STATUS" = "200" ] || [ "$STATUS" = "302" ]; then
             echo "  OK ($STATUS): $url"
         else
