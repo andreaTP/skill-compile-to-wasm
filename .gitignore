@@ -1,3 +1,6 @@
+# Claude Code
+.claude/
+
 # Toolchains (downloaded by Makefiles / install scripts)
 wasi-sdk/
 binaryen/
@@ -11,7 +14,7 @@ cjson-src/
 
 # Rust
 Cargo.lock
-!compile-to-wasm/examples/*/Cargo.lock
+!examples/*/Cargo.lock
 
 # Java / Maven
 *.class
