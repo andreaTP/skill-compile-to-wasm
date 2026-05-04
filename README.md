@@ -1,6 +1,6 @@
 # skill-compile-to-wasm
 
-A [Claude Code skill](https://docs.anthropic.com/en/docs/claude-code/skills) that teaches Claude how to compile C and Rust source code into optimized WebAssembly modules, and how to consume them from host runtimes like Wasmtime and Chicory.
+A [Claude Code skill](https://docs.anthropic.com/en/docs/claude-code/skills) that teaches Claude how to compile native source code into optimized WebAssembly modules, and how to consume them from host runtimes like Wasmtime and Chicory.
 
 ## Install
 
@@ -19,7 +19,7 @@ When activated, Claude will:
 3. Resolve toolchain versions dynamically (no hardcoded versions)
 4. Handle incompatible dependencies with proven patching strategies
 5. Verify the output with export checks
-6. Show how to consume the `.wasm` from Java (Chicory) or Rust (Wasmtime)
+6. Show how to consume the `.wasm` from a host runtime
 
 ## Example prompts
 
@@ -27,7 +27,7 @@ When activated, Claude will:
 compile cJSON to wasm as a reactor-mode library
 ```
 ```
-wrap the jq C library for use from Java via Chicory
+wrap the jq library for use from Java via Chicory
 ```
 ```
 build a Rust CLI tool that converts YAML to JSON, compile to wasm
@@ -36,7 +36,7 @@ build a Rust CLI tool that converts YAML to JSON, compile to wasm
 I'm getting "undefined symbol: signal" when compiling to wasm — help me fix it
 ```
 
-The `examples/` directory contains working, tested examples covering C (local + Docker), Rust (library + CLI), patching strategies, and host-side consumption (Wasmtime + Chicory). Each has a `Makefile` and `test.sh`.
+The `examples/` directory contains working, tested examples covering compilation, patching strategies, and host-side consumption. Each has a `Makefile` and `test.sh`.
 
 ## Contributing
 
