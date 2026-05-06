@@ -4,8 +4,15 @@ A [Claude Code skill](https://docs.anthropic.com/en/docs/claude-code/skills) tha
 
 ## Install
 
+Clone and copy to your Claude Code skills directory:
+
 ```bash
-claude install-skill https://github.com/andreaTP/skill-compile-to-wasm
+# For all your projects (personal skills):
+git clone https://github.com/andreaTP/skill-compile-to-wasm.git
+cp -r skill-compile-to-wasm ~/.claude/skills/compile-to-wasm
+
+# OR for a specific project only:
+cp -r skill-compile-to-wasm /path/to/project/.claude/skills/compile-to-wasm
 ```
 
 Once installed, Claude will automatically activate this skill when you ask it to compile code to wasm, wrap a native library, or build a wasm module.
